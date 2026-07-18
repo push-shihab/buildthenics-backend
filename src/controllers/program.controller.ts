@@ -207,6 +207,15 @@ export async function deleteProgram(req: AuthRequest, res: Response) {
     }
 
     // Verify ownership
+
+    if (!program || !program.createdBy) {
+  return res.status(404).json({ message: "Program not found" });
+}
+
+if (program.createdBy.toString() !== req.user.id) {
+  return res.status(403).json({ message: "Not authorized" });
+}
+
     if (program.createdBy.toString() !== req.user.id) {
       return res.status(403).json({ error: 'Forbidden. You are not the owner of this program.' });
     }
